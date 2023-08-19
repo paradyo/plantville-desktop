@@ -17,7 +17,7 @@ This project was developed for educational purposes on Object Oriented Programmi
 
 ## 🦾 OOP Architecture
 
-TODO!
+![oop_architecture](https://github.com/paradyo/plantville-desktop/blob/main/readme_photos/oop_architecture.png)
 
 ## 😴 TODO
 

@@ -4,7 +4,7 @@ This project was developed for educational purposes on Object Oriented Programmi
 
 ## 👨🏻‍💻 Never forget to read the Medium post for OOP architecture!
 
-[Click here for detailed Medium post.](https://paradyo.medium.com/how-an-engineer-builds-software-library-app-786a1bc95cf8)
+[Click here for detailed Medium post.](https://paradyo.medium.com/how-to-design-an-object-oriented-architecture-perfectly-85d8f4a9c151)
 
 ## 🚀 Start using it
 

@@ -11,6 +11,10 @@ This project was developed for educational purposes on Object Oriented Programmi
 1. Open the solution file with Visual Studio.
 2. Then click Start!
 
+## 👌 The Plantville App UI
+
+![app_image](https://github.com/paradyo/plantville-desktop/blob/main/readme_photos/app_image.png)
+
 ## 🦾 OOP Architecture
 
 TODO!

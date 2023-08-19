@@ -23,6 +23,7 @@ TODO!
 
 1. Store datas in json file and when the program restarted, read the datas from file.
 2. More interfaces will be added.
+3. Folder structures will be improved.
 
 # ⚠️ Warning
 

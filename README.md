@@ -11,6 +11,8 @@ This project was developed for educational purposes on Object Oriented Programmi
 1. Open the solution file with Visual Studio.
 2. Then click Start!
 
+(If any problem occurs please check if Newtonsoft JSON library successfully installed.)
+
 ## 👌 The Plantville App UI
 
 ![app_image](https://github.com/paradyo/plantville-desktop/blob/main/readme_photos/app_image.png)
@@ -21,9 +23,8 @@ This project was developed for educational purposes on Object Oriented Programmi
 
 ## 😴 TODO
 
-1. Store datas in json file and when the program restarted, read the datas from file.
-2. More interfaces will be added.
-3. Folder structures will be improved.
+1. More interfaces will be added.
+2. Folder structures will be improved.
 
 # ⚠️ Warning
 

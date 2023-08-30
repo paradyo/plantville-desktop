@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using Newtonsoft.Json;
 using System.IO;
 using System.Windows.Forms;
 
@@ -114,23 +115,90 @@ namespace PlantvilleEmrecanOzkan
         }
         private void Form1_Load(object sender, EventArgs e)
         {
-            //TODO File data check task!
             string jsonPath = Path.Combine(Application.StartupPath, "Resources", "data.json");
+            player = new Player();
+            garden = new Garden();
+            
             if (File.Exists(jsonPath))
             {
                 using (StreamReader r = new StreamReader(jsonPath))
                 {
                     string jsonData = r.ReadToEnd();
-                    DataFile gameData = JsonSerializer.Deserialize<DataFile>(jsonData);
-                    player = gameData.player;
-                    garden = gameData.garden;
+                    var gameData = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonData);
+
+                    player = new Player();
+                    garden = new Garden();
+                    foreach (var kvp in gameData)
+                    {
+                        string key = kvp.Key;
+                        object value = kvp.Value;
+
+                        if (key == "money")
+                        {
+                            player.SetMoney(Convert.ToInt32(value));
+                        }
+                        else if(key == "landPlots")
+                        {
+                            player.SetLandPlots(Convert.ToInt32(value));
+                        }
+                        else if (key == "harvestedPlants")
+                        {
+                            if (gameData.TryGetValue("harvestedPlants", out object harvestedPlantsObj) && harvestedPlantsObj is IEnumerable<object> harvestedPlants)
+                            {
+                                foreach (var plant in harvestedPlants)
+                                {
+                                    var plantData = Newtonsoft.Json.Linq.JObject.FromObject(plant);
+                                    Seed seed = new Seed();
+                                    var plantedSeedName = plantData["PlantedSeed"]["Name"];
+                                    var plantedSeedPrice = plantData["PlantedSeed"]["Price"];
+                                    var plantedSeedHarvestPrice = plantData["PlantedSeed"]["HarvestPrice"];
+                                    var plantedSeedTimeToHarvest = plantData["PlantedSeed"]["TimeToHarvest"];
+                                    var plantedSeedTimeToSpoil = plantData["PlantedSeed"]["TimeToSpoil"];
+                                    seed.SetName(plantedSeedName.ToString());
+                                    seed.SetPrice(Convert.ToInt32(plantedSeedPrice));
+                                    seed.SetHarvestPrice(Convert.ToInt32(plantedSeedHarvestPrice));
+                                    seed.SetTimeToHarvest(Convert.ToInt32(plantedSeedTimeToHarvest));
+                                    seed.SetTimeToSpoil(Convert.ToInt32(plantedSeedTimeToSpoil));
+
+                                    DateTime parsedPlantedTime = DateTime.Parse(plantData["PlantedTime"].ToString());
+                                    Plant plantObj = new Plant(seed);
+                                    plantObj.SetPlantedTime(parsedPlantedTime);
+                                    player.Inventory.AddHarvestedPlant(plantObj);
+                                }
+                            }
+                        }
+                        else if (key == "plants")
+                        {
+                            if (gameData.TryGetValue("plants", out object plantsObj) && plantsObj is IEnumerable<object> plants)
+                            {
+                                foreach (var plant in plants)
+                                {
+                                    var plantData = Newtonsoft.Json.Linq.JObject.FromObject(plant);
+                                    Seed seed = new Seed();
+                                    var plantedSeedName = plantData["PlantedSeed"]["Name"];
+                                    var plantedSeedPrice = plantData["PlantedSeed"]["Price"];
+                                    var plantedSeedHarvestPrice = plantData["PlantedSeed"]["HarvestPrice"];
+                                    var plantedSeedTimeToHarvest = plantData["PlantedSeed"]["TimeToHarvest"];
+                                    var plantedSeedTimeToSpoil = plantData["PlantedSeed"]["TimeToSpoil"];
+                                    seed.SetName(plantedSeedName.ToString());
+                                    seed.SetPrice(Convert.ToInt32(plantedSeedPrice));
+                                    seed.SetHarvestPrice(Convert.ToInt32(plantedSeedHarvestPrice));
+                                    seed.SetTimeToHarvest(Convert.ToInt32(plantedSeedTimeToHarvest));
+                                    seed.SetTimeToSpoil(Convert.ToInt32(plantedSeedTimeToSpoil));
+
+                                    DateTime parsedPlantedTime = DateTime.Parse(plantData["PlantedTime"].ToString());
+                                    Plant plantObj = new Plant(seed);
+                                    plantObj.SetPlantedTime(parsedPlantedTime);
+                                    garden.AddPlant(plantObj);
+                                }
+                            }
+                        }
+
+                    }
+                    
                 }
             }
-            else
-            {
-                player = new Player();
-                garden = new Garden();
-            }
+            
             seedsEmporium = new SeedsEmporium();
             ReloadSeedEmporiumList();
             ReloadGardenList();
@@ -305,32 +373,19 @@ namespace PlantvilleEmrecanOzkan
         }
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Dictionary<string, List<Plant>> inventoryDict = new Dictionary<string, List<Plant>>()
-            {
-                { "harvestedPlants", player.Inventory.GetHarvestedPlants() }
-            };
-            Dictionary<string, object> playerDict = new Dictionary<string, object>()
+
+            Dictionary<string, object> dict = new Dictionary<string, object>()
             {
                 { "money", player.GetMoney() },
                 { "landPlots", player.GetLandPlots() },
-                { "inventory", inventoryDict }
-            };
-            //TODO: Improve json data for list objects.
-
-            Dictionary<string, List<Plant>> gardenDict = new Dictionary<string, List<Plant>>()
-            {
+                { "harvestedPlants", player.Inventory.GetHarvestedPlants() },
                 { "plants", garden.GetPlants() }
-            };
 
-            Dictionary<string, object> dataDict = new Dictionary<string, object>()
-            {
-                { "player", playerDict },
-                { "garden", gardenDict }
             };
 
             string jsonPath = Path.Combine(Application.StartupPath, "Resources", "data.json");
 
-            string jsonData = JsonSerializer.Serialize(dataDict);
+            string jsonData = JsonConvert.SerializeObject(dict);
 
             using (StreamWriter w = new StreamWriter(jsonPath))
             {

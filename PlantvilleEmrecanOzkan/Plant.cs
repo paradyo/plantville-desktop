@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+using System.Runtime.Serialization;
 
 namespace PlantvilleEmrecanOzkan
 {
+    [DataContract]
     class Plant
     {
+        [DataMember]
         private Seed PlantedSeed { get; set; }
+        [DataMember]
         private DateTime PlantedTime { get; set; }
         public Plant(Seed seed)
         {
@@ -18,6 +22,10 @@ namespace PlantvilleEmrecanOzkan
         public Seed GetPlantedSeed()
         {
             return PlantedSeed;
+        }
+        public void SetPlantedTime(DateTime plantedTime)
+        {
+            PlantedTime = plantedTime;
         }
         public bool IsItTimeToSpoil()
         {

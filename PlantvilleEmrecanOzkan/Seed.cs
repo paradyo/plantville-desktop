@@ -1,17 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace PlantvilleEmrecanOzkan
 {
+    [DataContract]
     class Seed
     {
+        [DataMember]
         protected string Name { get; set; }
+        [DataMember]
         private int Price { get; set; }
+        [DataMember]
         private int HarvestPrice { get; set; }
+        [DataMember]
         private int TimeToHarvest { get; set; } // Seconds
+        [DataMember]
         private int TimeToSpoil { get; set; } // Seconds
 
         public string GetName()
